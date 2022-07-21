@@ -9,7 +9,7 @@ class Install
      * @var array
      */
     protected static $pathRelation = array (
-  'config/plugin/jyil/webman-base-utils' => 'config/plugin/jyil/webman-base-utils',
+  'config' => 'config/plugin/jyil/webman-base-utils',
 );
 
     /**
