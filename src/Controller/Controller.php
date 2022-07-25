@@ -53,14 +53,15 @@ abstract class Controller
      *
      * @param array  $data
      * @param string $message
+     * @param int $code
      * @param array $headers
      *
      * @return Response
      */
-    public function success(array $data = [], $message = '操作成功', array $headers = [])
+    public function success(array $data = [], $message = '操作成功', int $code = 20000, array $headers = [])
     {
         $response = [
-            "{$this->code}" => 0,
+            "{$this->code}" => $code,
            'status' => 'ok',
             "{$this->message}" => $message,
             "{$this->data}" => $data ?: (object)[],
@@ -78,11 +79,12 @@ abstract class Controller
     /**
      * @param int         $code
      * @param string|null $message
+     * @param int|bool $httpStatus
      * @param array $headers
      *
      * @return Response
      */
-    public function fail(int $code = 500, ?string $message = null, array $headers = [])
+    public function fail(int $code = 50000, ?string $message = null, $httpStatus = false, array $headers = [])
     {
         $response = [
             "{$this->code}" => $code,
@@ -93,7 +95,7 @@ abstract class Controller
         Log::info('http.' . $this->getCalledSource(), $response);
         return response(
             json_encode($response, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT),
-            SymfonyResponse::HTTP_INTERNAL_SERVER_ERROR,
+            $httpStatus ?: SymfonyResponse::HTTP_INTERNAL_SERVER_ERROR,
             array_merge([
                 'Content-Type' => 'application/json',
             ], $headers)
